@@ -1,21 +1,14 @@
 import { cacheDir } from '@spamalot/core/node/cache';
 import { dirname, join } from 'node:path';
-import { apiRequest } from './api.js';
+import { apiRequest, type RequestMethod } from './api.js';
 import * as z from 'zod';
 import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
 import * as io from 'ioium/node';
 import { createInterface } from 'node:readline/promises';
 
-const base = 'https://replicate.npmjs.com/';
-
-const request: <T>(
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-	href: string,
-	body?: object,
-	onWarning?: ((message: string) => void) | undefined
-) => Promise<T> = apiRequest.bind<any>({
-	base,
-});
+function request<T>(method: RequestMethod, href: string, body?: object): Promise<T> {
+	return apiRequest<T>(method, href, { base: 'https://replicate.npmjs.com/', body });
+}
 
 export interface Metadata {
 	db_name: string;
@@ -210,7 +203,7 @@ export async function update(): Promise<number> {
 			continue;
 		}
 
-		const doc = await apiRequest<{ _rev?: string }>('GET', `/${change.id}`).catch(() => null);
+		const doc = await apiRequest<{ _rev?: string }>('GET', `/${change.id}`, { base: 'https://registry.npmjs.org/' }).catch(() => null);
 
 		if (doc?._rev) cache.entries[change.id] = doc._rev;
 	}

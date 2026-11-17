@@ -19,40 +19,48 @@ export let diagnostics = {
 	retries: 0,
 };
 
-export async function apiRequest<T>(
-	this: { retry?: number; base?: string } | void,
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-	href: string,
-	body?: object,
-	onWarning?: (message: string) => void
-): Promise<T> {
-	const url = new URL(href, this?.base || 'https://api.npmjs.org/');
-	debug(method, url.href);
+export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+export interface RequestOptions {
+	/** The URL that relative paths resolve against, `https://api.npmjs.org/` by default */
+	base?: string;
+	/** Sent as search parameters for GET requests and as JSON otherwise */
+	body?: object;
+	onWarning?(message: string): void;
+}
+
+const maxRetries = 5;
+
+export async function apiRequest<T>(method: RequestMethod, href: string, options: RequestOptions = {}): Promise<T> {
+	const { base = 'https://api.npmjs.org/', body, onWarning } = options;
+
+	const url = new URL(href, base);
 	if (method == 'GET' && body) for (const [key, value] of Object.entries(body)) url.searchParams.set(key, JSON.stringify(value));
 
-	const res = await fetch(url, {
-		method,
-		headers: {
-			'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:1.0) spam/1.0',
-			Accept: 'application/json',
-		},
-		body: typeof body == 'undefined' || method == 'GET' ? undefined : JSON.stringify(body),
-	});
+	for (let retry = 1; ; retry++) {
+		debug(method, url.href);
 
-	let { retry = 0 } = this || {};
-	if (res.status == 429 && retry < 5) {
-		onWarning?.('Too many requests, waiting...');
-		retry++;
-		diagnostics.retries++;
-		// Exponential backoff
-		await wait(Math.pow(2, retry) * 1000);
-		return await apiRequest.call<{ retry: number }, any[], Promise<T>>({ retry }, method, href, onWarning);
+		const res = await fetch(url, {
+			method,
+			headers: {
+				'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:1.0) spam/1.0',
+				Accept: 'application/json',
+			},
+			body: typeof body == 'undefined' || method == 'GET' ? undefined : JSON.stringify(body),
+		});
+
+		if (res.status == 429 && retry <= maxRetries) {
+			onWarning?.('Too many requests, waiting...');
+			diagnostics.retries++;
+			await wait(Math.pow(2, retry) * 1000);
+			continue;
+		}
+
+		if (!res.ok) throw res.statusText || `unknown error (${res.status})`;
+
+		diagnostics.requests++;
+		return await res.json();
 	}
-
-	if (!res.ok) throw res.statusText || `unknown error (${res.status})`;
-
-	diagnostics.requests++;
-	return await res.json();
 }
 
 function downloadsWeightedAverage(info: PackageDownloadInfo, span: number, window: number, weight: number): number {
@@ -116,7 +124,7 @@ export interface PackageDownloadInfo {
 
 export async function getPackageDownloads(packageName: string, onWarning?: (message: string) => void): Promise<PackageDownloadInfo> {
 	const downloadsBefore = (day: string) =>
-		apiRequest<PackageDownloadInfo>('GET', `/downloads/range/2015-01-10:${day}/${packageName}`, undefined, onWarning);
+		apiRequest<PackageDownloadInfo>('GET', `/downloads/range/2015-01-10:${day}/${packageName}`, { onWarning });
 
 	const results = await downloadsBefore(today);
 	results.total = 0;
@@ -169,7 +177,7 @@ export async function getPackageDownloadsBulk(
 			`/downloads/range/${start}:${end}/${Array.from(remainingNames)
 				.map(name => name + ',')
 				.join('')}`,
-			onWarning
+			{ onWarning }
 		);
 		year--;
 		return result;
