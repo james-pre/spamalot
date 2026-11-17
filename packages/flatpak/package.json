@@ -29,8 +29,14 @@
 		"native",
 		"README.md"
 	],
+	"os": [
+		"linux"
+	],
+	"cpu": [
+		"x64"
+	],
 	"scripts": {
-		"install": "girbind build",
+		"prepare": "girbind build",
 		"build": "tsc -b"
 	},
 	"dependencies": {
