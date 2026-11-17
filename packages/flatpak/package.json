@@ -41,11 +41,11 @@
 	},
 	"dependencies": {
 		"@spamalot/core": "^0.1.0",
-		"girbind": "^0.3.1",
+		"girbind": "^0.7.1",
 		"ioium": "^1.0.0"
 	},
 	"devDependencies": {
-		"girbind-devel": "^0.3.1"
+		"girbind-devel": "^0.7.1"
 	},
 	"girbindDependencies": [
 		"flatpak"
