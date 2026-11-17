@@ -1,0 +1,46 @@
+{
+	"name": "@spamalot/cli",
+	"version": "0.1.0",
+	"description": "Source and Package Administration/Management",
+	"author": "James Prevett <jp@jamespre.dev>",
+	"license": "GPL-3.0-or-later",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/james-pre/spamalot.git",
+		"directory": "packages/cli"
+	},
+	"homepage": "https://github.com/james-pre/spamalot/tree/main/packages/cli#readme",
+	"bugs": {
+		"url": "https://github.com/james-pre/spamalot/issues"
+	},
+	"type": "module",
+	"keywords": [
+		"package-manager",
+		"cli"
+	],
+	"bin": {
+		"spam": "./dist/cli/main.js"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsc -b"
+	},
+	"dependencies": {
+		"@spamalot/core": "^0.1.0",
+		"@spamalot/npm": "^0.1.0",
+		"commander": "^15.0.0",
+		"ioium": "^1.0.0",
+		"zod": "^4.3.6"
+	},
+	"optionalDependencies": {
+		"@spamalot/dnf": "^0.1.0",
+		"@spamalot/flatpak": "^0.1.0"
+	},
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	}
+}

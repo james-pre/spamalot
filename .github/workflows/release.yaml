@@ -27,11 +27,21 @@ jobs:
                   node-version: latest
                   registry-url: https://registry.npmjs.org/
 
+            - name: Install native dependencies
+              run: sudo apt-get install -y libflatpak-dev
+
             - name: Install dependencies
-              run: npm install
+              run: npm ci
 
             - name: Build
-              run: npx tsc
+              run: npx tsc -b
+
+            - name: Resolve package
+              id: resolve
+              run: npx monorepo release resolve "$TAG"
+              env:
+                  TAG: ${{ github.event.release.tag_name }}
 
             - name: Publish
               run: npm publish --access=public --provenance ${{ github.event.release.prerelease && '--tag next' || '' }}
+              working-directory: ${{ steps.resolve.outputs.path }}

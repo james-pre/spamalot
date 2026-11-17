@@ -1,0 +1,44 @@
+{
+	"name": "@spamalot/npm",
+	"version": "0.1.0",
+	"description": "npm registry, lockfile, and package manager support for spamalot",
+	"author": "James Prevett <jp@jamespre.dev>",
+	"license": "GPL-3.0-or-later",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/james-pre/spamalot.git",
+		"directory": "packages/npm"
+	},
+	"homepage": "https://github.com/james-pre/spamalot/tree/main/packages/npm#readme",
+	"bugs": {
+		"url": "https://github.com/james-pre/spamalot/issues"
+	},
+	"type": "module",
+	"keywords": [
+		"npm",
+		"package-manager"
+	],
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": "./dist/index.js",
+		"./*": "./dist/*.js"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsc -b"
+	},
+	"dependencies": {
+		"@spamalot/core": "^0.1.0",
+		"ioium": "^1.0.0",
+		"zod": "^4.3.6"
+	},
+	"sideEffects": false,
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	}
+}

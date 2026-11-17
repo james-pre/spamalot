@@ -1,0 +1,41 @@
+{
+	"name": "@spamalot/core",
+	"version": "0.1.0",
+	"description": "Package management abstractions shared by spamalot backends and frontends",
+	"author": "James Prevett <jp@jamespre.dev>",
+	"license": "GPL-3.0-or-later",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/james-pre/spamalot.git",
+		"directory": "packages/core"
+	},
+	"homepage": "https://github.com/james-pre/spamalot/tree/main/packages/core#readme",
+	"bugs": {
+		"url": "https://github.com/james-pre/spamalot/issues"
+	},
+	"type": "module",
+	"keywords": [
+		"package-manager"
+	],
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": "./dist/index.js",
+		"./*": "./dist/*.js"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsc -b"
+	},
+	"dependencies": {
+		"semver": "^7.7.4"
+	},
+	"sideEffects": false,
+	"publishConfig": {
+		"provenance": true,
+		"access": "public"
+	}
+}

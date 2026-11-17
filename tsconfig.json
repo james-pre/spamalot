@@ -2,10 +2,16 @@
 	"compilerOptions": {
 		"module": "NodeNext",
 		"target": "ESNext",
+		"declaration": true,
 		"strict": true,
-		"rootDir": "src",
-		"outDir": "dist",
 		"types": ["node"]
 	},
-	"include": ["src/**/*.ts"]
+	"files": [],
+	"references": [
+		{ "path": "./packages/core" },
+		{ "path": "./packages/npm" },
+		{ "path": "./packages/dnf" },
+		{ "path": "./packages/flatpak" },
+		{ "path": "./packages/cli" }
+	]
 }

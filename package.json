@@ -1,55 +1,40 @@
 {
-	"name": "spam-cli",
-	"version": "0.1.0",
+	"name": "@spamalot/root",
+	"version": "0.0.0",
+	"private": true,
 	"description": "Source and Package Administration/Management",
 	"author": "James Prevett <jp@jamespre.dev>",
 	"license": "GPL-3.0-or-later",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/james-pre/spam.git"
+		"url": "git+https://github.com/james-pre/spamalot.git"
 	},
-	"keywords": [
-		"utility"
-	],
-	"type": "module",
+	"homepage": "https://github.com/james-pre/spamalot#readme",
 	"bugs": {
-		"url": "https://github.com/james-pre/spam/issues"
+		"url": "https://github.com/james-pre/spamalot/issues"
 	},
-	"bin": {
-		"spam": "./dist/cli/main.js"
-	},
-	"exports": {
-		".": "./dist/index.js",
-		"./*": "./dist/*.js"
-	},
-	"files": [
-		"dist",
-		"native",
-		"LICENSE.md"
+	"type": "module",
+	"workspaces": [
+		"packages/core",
+		"packages/npm",
+		"packages/dnf",
+		"packages/flatpak",
+		"packages/cli"
 	],
 	"scripts": {
-		"install": "girbind build",
-		"prepublishOnly": "tsc -b",
 		"build": "tsc -b",
+		"watch": "tsc -b -w",
+		"clean": "rm -rf packages/*/dist packages/*/tsconfig.tsbuildinfo",
 		"format": "prettier --write .",
 		"format:check": "prettier --check ."
 	},
-	"homepage": "https://github.com/james-pre/spam#readme",
 	"devDependencies": {
 		"@commander-js/extra-typings": "^15.0.0",
+		"@james-pre/monorepo": "^1.0.0",
 		"@types/node": "^25.5.2",
-		"girbind-devel": "^0.3.1",
+		"@types/semver": "^7.7.1",
 		"prettier": "^3.6.2",
 		"typescript": "^6.0.0"
-	},
-	"dependencies": {
-		"@types/semver": "^7.7.1",
-		"commander": "^15.0.0",
-		"girbind": "^0.3.1",
-		"ioium": "^1.0.0",
-		"libdnf": "^0.4.0",
-		"semver": "^7.7.4",
-		"zod": "^4.3.6"
 	},
 	"prettier": {
 		"singleQuote": true,
@@ -59,8 +44,5 @@
 		"printWidth": 140,
 		"arrowParens": "avoid",
 		"experimentalOperatorPosition": "start"
-	},
-	"girbindDependencies": [
-		"flatpak"
-	]
+	}
 }
