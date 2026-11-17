@@ -19,7 +19,7 @@
 		"cli"
 	],
 	"bin": {
-		"spam": "./dist/cli/main.js"
+		"spam": "dist/cli/main.js"
 	},
 	"files": [
 		"dist",
